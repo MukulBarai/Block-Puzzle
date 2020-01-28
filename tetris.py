@@ -271,17 +271,18 @@ def draw():
 	pygame.display.update()
 
 def update():
-	global shape
+	global shape, clockTime
 	if(checkBottom(shape)):
 		goDown(shape)
 	else:
 		fillMatrices()
 		checkPoint()
+		clockTime = 0.5
 	return
 
 
 def run():
-	global gameOver, nTime, startTime
+	global gameOver, nTime, startTime, clockTime
 	while gameOver is False:
 		startTime = time.time()
 		for event in pygame.event.get():
@@ -291,7 +292,7 @@ def run():
 				if event.key == pygame.K_LEFT:
 					moveLeft(shape)
 				elif event.key == pygame.K_DOWN:
-					goDown(shape)
+					clockTime = 0.1
 				elif event.key == pygame.K_RIGHT:
 					moveRight(shape)
 				elif event.key == pygame.K_UP:
