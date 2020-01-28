@@ -165,10 +165,10 @@ def checkCollision(shape):
 				return False
 	return True
 
-def rotate(shape):
+def rotate():
+	global shape
 	nShape = getRotation(shape)
 	if checkCollision(nShape):
-		print(checkCollision(nShape))
 		shape = nShape
 	return
 
@@ -303,7 +303,7 @@ def run():
 				elif event.key == pygame.K_RIGHT:
 					moveRight(shape)
 				elif event.key == pygame.K_UP:
-					rotate(shape)
+					rotate()
 			#endif
 
 		draw()
