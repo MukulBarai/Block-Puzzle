@@ -153,7 +153,7 @@ def getRotation(shape):
     return nShape
 
 def checkCollision(shape):
-    if shape.xCor - 1 <= -1:
+    if shape.xCor <= -1:
         return False
     if shape.xCor + shape.width >= col:
         return False
