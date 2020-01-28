@@ -111,10 +111,12 @@ class ShapeT:
 		[0, 1, 0]
 	]
 
+shapes = [ShapeZ, ShapeS, ShapeT, ShapeF, ShapeL, ShapeI, ShapeF, ShapeO]
+
 def newShape():
-	shapes = [ShapeZ, ShapeS, ShapeT, ShapeF, ShapeL, ShapeI, ShapeF, ShapeO]
+	global shapes
 	shape = shapes[random.randrange(len(shapes))]
-	return shape(9, 10)
+	return shape(9, 0)
 
 #Global shape variable
 shape = newShape()
@@ -219,8 +221,12 @@ def fillMatrices():
 				matrices[shape.yCor+i][shape.xCor+j].fill = True
 	shape = newShape()
 
-def collapseRow(row):
-	pass
+def clearRow(row):
+	global matrices
+	for i in range(row, 0, -1):
+		for j in range(col):
+			matrices[i][j] = matrices[i-1][j]
+	return
 
 def checkPoint():
 	for i in range(row):
@@ -228,7 +234,8 @@ def checkPoint():
 			if matrices[i][j].fill is False:
 				break
 			if j + 1 == col:
-				collapseRow(i)
+				clearRow(i)
+	return
 
 #Fillig matrices with initial block
 def initialize():
@@ -269,6 +276,7 @@ def update():
 		goDown(shape)
 	else:
 		fillMatrices()
+		checkPoint()
 	return
 
 
