@@ -1,6 +1,7 @@
 import pygame
 import time
 import random
+import copy
 
 #Declaring Variables
 col = 20
@@ -133,38 +134,44 @@ class Block:
 	fill = False
 	color = (0, 250, 0)
 
+
+
 #Method for rotation
-def rotateR():
+def getRotation(shape):
 	col = []
-	global shape
-	for i in range(shape.width):
+	nShape = copy.deepcopy(shape)
+	for i in range(nShape.width):
 		row = []
-		for j in range(shape.height):
-			row.append(shape.shape[shape.height-j-1][i])
+		for j in range(nShape.height):
+			row.append(nShape.shape[nShape.height-j-1][i])
 		col.append(row)
-	shape.shape = col
-	width = shape.width
-	shape.width = shape.height
-	shape.height = width
-	shape.xCor += round((shape.height - shape.width) / 2)
-	shape.yCor -= round((shape.height - shape.width) / 2)
+	nShape.shape = col
+	nShape.width = shape.height
+	nShape.height = shape.width
+	nShape.xCor += round((nShape.height - nShape.width) / 2)
+	nShape.yCor -= round((nShape.height - nShape.width) / 2)
+	return nShape
+
+def checkCollision(shape):
+	if shape.xCor - 1 <= -1:
+		return False
+	if shape.xCor + shape.width >= col:
+		return False
+	if shape.yCor + shape.height >= row:
+		return False
+	for i in range(shape.height):
+		for j in range(shape.width):
+			if shape.shape[i][j] and matrices[shape.yCor+i][shape.xCor+j].fill:
+				return False
+	return True
+
+def rotate(shape):
+	nShape = getRotation(shape)
+	if checkCollision(nShape):
+		print(checkCollision(nShape))
+		shape = nShape
 	return
 
-def rotateL():
-	col = []
-	global shape
-	for i in range(shape.width):
-		row = []
-		for j in range(shape.height):
-			row.append(shape.shape[j][shape.width-i-1])
-		col.append(row)
-	shape.shape = col
-	width = shape.width
-	shape.width = shape.height
-	shape.height = width
-	shape.xCor += round((shape.height - shape.width) / 2)
-	shape.yCor -= round((shape.height - shape.width) / 2)
-	return
 
 #Method for moving left and right
 def checkLeft(shape):
@@ -189,12 +196,12 @@ def checkRight(shape):
 	return True
 
 def moveLeft(shape):
-	if(checkLeft(shape)):
+	if checkLeft(shape):
 		shape.xCor -= 1
 	return
 
 def moveRight(shape):
-	if(checkRight(shape)):
+	if checkRight(shape):
 		shape.xCor += 1
 	return
 
@@ -272,7 +279,7 @@ def draw():
 
 def update():
 	global shape, clockTime
-	if(checkBottom(shape)):
+	if checkBottom(shape):
 		goDown(shape)
 	else:
 		fillMatrices()
@@ -292,11 +299,11 @@ def run():
 				if event.key == pygame.K_LEFT:
 					moveLeft(shape)
 				elif event.key == pygame.K_DOWN:
-					clockTime = 0.1
+					clockTime = 0.025
 				elif event.key == pygame.K_RIGHT:
 					moveRight(shape)
 				elif event.key == pygame.K_UP:
-					rotateR()
+					rotate(shape)
 			#endif
 
 		draw()
