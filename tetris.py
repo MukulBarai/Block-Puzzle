@@ -14,7 +14,7 @@ matrices = []
 
 #Variable for clock
 startTime = time.time()
-clockTime = 0.5
+clockTime = 0.25
 nTime = 0
 
 
@@ -112,15 +112,8 @@ class ShapeT:
         [0, 1, 0]
     ]
 
+random.seed(5850)
 shapes = [ShapeZ, ShapeS, ShapeT, ShapeF, ShapeL, ShapeI, ShapeF, ShapeO]
-
-def newShape():
-    global shapes
-    shape = shapes[random.randrange(len(shapes))]
-    return shape(9, 0)
-
-#Global shape variable
-shape = newShape()
 
 #Single block
 class Block:
@@ -134,6 +127,13 @@ class Block:
     fill = False
     color = (0, 250, 0)
 
+def newShape():
+    global shapes
+    shape = shapes[random.randrange(len(shapes))]
+    return shape(9, 0)
+
+#Global shape variable
+shape = newShape()
 
 
 #Method for rotation
@@ -153,12 +153,14 @@ def getRotation(shape):
     return nShape
 
 def checkCollision(shape):
+    #Checking out of index
     if shape.xCor <= -1:
         return False
     if shape.xCor + shape.width >= col:
         return False
     if shape.yCor + shape.height >= row:
         return False
+
     for i in range(shape.height):
         for j in range(shape.width):
             if shape.shape[i][j] and matrices[shape.yCor+i][shape.xCor+j].fill:
@@ -244,14 +246,6 @@ def checkPoint():
                 clearRow(i)
     return
 
-#Fillig matrices with initial block
-def initialize():
-    for i in range(row):
-        nRow = []
-        for j in range(col):
-            nRow.append(Block())
-        matrices.append(nRow)
-
 def drawShape(shape):
     for i in range(shape.height):
         for j in range(shape.width):
@@ -277,6 +271,16 @@ def draw():
         pygame.draw.line(window, (17, 17, 18), (i*blockW, 0), (i*blockW, row*blockW))
     pygame.display.update()
 
+
+#Fillig matrices with initial block
+def initialize():
+    for i in range(row):
+        nRow = []
+        for j in range(col):
+            nRow.append(Block())
+        matrices.append(nRow)
+
+
 def update():
     global shape, clockTime
     if checkBottom(shape):
@@ -284,7 +288,7 @@ def update():
     else:
         fillMatrices()
         checkPoint()
-        clockTime = 0.5
+        clockTime = 0.25
     return
 
 
